@@ -1,0 +1,64 @@
+.root {
+  --animation-duration: 0;
+
+  position: relative;
+  transition-duration: var(--animation-duration);
+  transition-timing-function: ease;
+  transition-property: width, height;
+  overflow: hidden;
+  width: min-content;
+}
+
+.root.idle {
+  overflow: visible;
+}
+
+.prevChildren,
+.currentChildren {
+  transition: all var(--animation-duration) ease;
+  position: relative;
+}
+
+.prevChildren {
+  z-index: 2;
+}
+
+.currentChildren {
+  z-index: 1;
+}
+
+.beforeEnter .prevChildren,
+.prevChildren {
+  opacity: 1;
+}
+
+.entering .prevChildren,
+.entered .prevChildren {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.entering .prevChildren,
+.idle .prevChildren,
+.entered .prevChildren {
+  opacity: 0;
+}
+
+.beforeEnter .currentChildren,
+.currentChildren {
+  opacity: 0;
+}
+
+.entering .currentChildren,
+.entered .currentChildren {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.entering .currentChildren,
+.idle .currentChildren,
+.entered .currentChildren {
+  opacity: 1;
+}

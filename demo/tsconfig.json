@@ -1,0 +1,6 @@
+{
+  "extends": "../tsconfig.global.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+  }
+}

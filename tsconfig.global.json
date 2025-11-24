@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "ES6",
+
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+
+    "baseUrl": ".",
+
+    "skipLibCheck": true,
+    "checkJs": false,
+    "allowJs": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "alwaysStrict": true,
+    "experimentalDecorators": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true
+  },
+
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "allowSyntheticDefaultImports": true
+    }
+  }
+}
