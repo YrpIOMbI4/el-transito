@@ -1,4 +1,5 @@
 {
+  "version": "0.0.1",
   "name": "el-transito-monorepo",
   "license": "MIT",
   "packageManager": "yarn@4.6.0",
