@@ -3,15 +3,19 @@ import typescript from "@rollup/plugin-typescript";
 import resolve from "@rollup/plugin-node-resolve";
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
-import { createRequire } from 'node:module'; // ← КРИТИЧНО!
+import { createRequire } from 'node:module';
 
 // @ts-ignore
 const require = createRequire(import.meta.url);
-const pkg = require('./package.json'); // ← CommonJS стиль!
+const pkg = require('./package.json');
+
 
 export default {
   input: ['./src/index.ts'],
-  external: ['react', 'react-dom'], // ✅ React НЕ бандлится!
+  external: [
+    'react',
+    'react-dom',
+  ],
   output: [
     {
       file: pkg.main || 'dist/index.cjs.js',
@@ -30,17 +34,34 @@ export default {
   ],
   plugins: [
     resolve({
-      browser: true // ✅ Для браузера
+      browser: true,
+      dedupe: ['react', 'react-dom'],
+      extensions: ['.js', '.ts', '.tsx']
     }),
     postcss({
       modules: true,
       extract: false,
+      minimize: true,
+      plugins: []
     }),
     commonjs(),
     typescript({
       sourceMap: false,
       tsconfig: './tsconfig.json',
+      noEmitOnError: true
     }),
-    terser()
-  ],
-}
+    terser({
+      compress: {
+        dead_code: true,
+        unused: true,
+        toplevel: true,
+        passes: 2,
+        drop_console: true,
+      },
+      mangle: true,
+      format: {
+        comments: false
+      }
+    })
+  ].filter(Boolean)
+};

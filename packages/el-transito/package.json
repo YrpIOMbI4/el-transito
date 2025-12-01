@@ -1,11 +1,18 @@
 {
   "name": "@sdrobot/el-transito",
+  "sideEffects": false,
   "description": "React lib helping with easy transitions between elements",
   "author": "Sergey Drobot <yrpiombi4@mail.ru>",
-  "keywords": ["animation", "react", "typescript", "transition", "smooth"],
+  "keywords": [
+    "animation",
+    "react",
+    "typescript",
+    "transition",
+    "smooth"
+  ],
   "homepage": "https://github.com/YrpIOMbI4/el-transito",
   "license": "MIT",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.esm.js",
@@ -18,18 +25,19 @@
     "directory": "dist",
     "access": "public",
     "type": "git",
-    "registry": "https://github.com/YrpIOMbI4/el-transito",
+    "registry": "",
     "main": "dist/index.js",
     "types": "dist/index.d.ts"
   },
   "repository": {
     "type": "git",
-    "url": "",
+    "url": "https://github.com/YrpIOMbI4/el-transito",
     "directory": "packages/el-transito"
   },
   "scripts": {
-    "prebuild": "run -T rimraf dist",
-    "build": "rollup -c rollup.config.ts --configPlugin typescript",
+    "clean": "rimraf dist",
+    "build:rollup": "rollup -c rollup.config.ts --configPlugin typescript",
+    "build": "yarn run clean && yarn run build:rollup",
     "lint:types": "tsc --noEmit",
     "publish": "yarn npm publish --tolerate-republish"
   },
@@ -38,15 +46,12 @@
     "react": ">= 16.3.0",
     "react-dom": ">= 16.3.0"
   },
-  "dependencies": {
-    "classnames": "^2.5.1",
-    "uuid": "^13.0.0"
-  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.3.0",
+    "classnames": "^2.5.1",
     "postcss": "^8.5.6",
     "rimraf": "^6.1.2",
     "rollup": "^4.53.3",
