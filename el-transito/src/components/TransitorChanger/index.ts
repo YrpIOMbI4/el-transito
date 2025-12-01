@@ -1,1 +1,0 @@
-export { TransitorChanger } from './TransitorChanger';

@@ -2,19 +2,23 @@
   "name": "@sdrobot/el-transito",
   "description": "React lib helping with easy transitions between elements",
   "author": "Sergey Drobot <yrpiombi4@mail.ru>",
+  "keywords": ["animation", "react", "typescript", "transition", "smooth"],
+  "homepage": "https://github.com/YrpIOMbI4/el-transito",
   "license": "MIT",
-  "version": "0.1.0",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "version": "0.0.1-alpha.4",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.esm.js",
   "files": [
     "dist",
-    "LICENSE"
+    "LICENSE",
+    "README.md"
   ],
   "publishConfig": {
     "directory": "dist",
     "access": "public",
     "type": "git",
-    "registry": "",
+    "registry": "https://github.com/YrpIOMbI4/el-transito",
     "main": "dist/index.js",
     "types": "dist/index.d.ts"
   },
@@ -24,19 +28,32 @@
     "directory": "packages/el-transito"
   },
   "scripts": {
-    "clean": "run -T rimraf dist",
-    "build:ts": "tsc --build",
-    "build:css": "postcss src/**/*.css --dir dist --config ./postcss.config.js",
-    "build": "npm run clean && npm run build:ts && npm run build:css"
+    "prebuild": "run -T rimraf dist",
+    "build": "rollup -c rollup.config.ts --configPlugin typescript",
+    "lint:types": "tsc --noEmit",
+    "publish": "yarn npm publish --tolerate-republish"
   },
   "packageManager": "yarn@4.6.0",
   "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "typescript": "^5.0.0"
+    "react": ">= 16.3.0",
+    "react-dom": ">= 16.3.0"
   },
   "dependencies": {
     "classnames": "^2.5.1",
     "uuid": "^13.0.0"
-  }
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "postcss": "^8.5.6",
+    "rimraf": "^6.1.2",
+    "rollup": "^4.53.3",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.0.0"
+  },
+  "stableVersion": "0.1.0"
 }

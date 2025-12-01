@@ -2,12 +2,11 @@
   "name": "el-transito-demo",
   "version": "0.1.0",
   "private": true,
-  "keywords": "animation, react, transition, smooth transition",
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.ts"
   },
   "dependencies": {
-    "@sdrobot/el-transito": "workspace:*"
+    "@sdrobot/el-transito": "0.0.1-alpha.1"
   },
   "peerDependencies": {
     "react": "^18.0.0",
@@ -15,9 +14,11 @@
     "typescript": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.5",
     "@babel/plugin-proposal-decorators": "^7.28.0",
     "@babel/plugin-transform-class-properties": "^7.27.1",
     "@babel/preset-react": "^7.27.1",
+    "@types/babel__core": "^7",
     "@types/node": "^24.7.2",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
