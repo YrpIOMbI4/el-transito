@@ -3,7 +3,7 @@
 This lib allows making easy animated transition between elements or to appending elements.\
 The common feature is to automatically get interchangeable elements sizes and smoothly animate size change.
 
-![demo](https://github.com/YrpIOMbI4/el-transito/tree/master/shared/el-transito.gif)
+![demo](https://github.com/YrpIOMbI4/el-transito/blob/master/shared/el-transito.gif)
 
 ## Install
 ```bash
