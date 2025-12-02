@@ -1,10 +1,20 @@
 import {
   ITransitorChangerViewModelParams,
   ITransitorChangerViewModel,
-  ITransitorElementSizes, TTransitorChangerItem,
+  ITransitorElementSizes,
+  TTransitorChangerItem,
 } from './TransitorChanger.types';
 import { AnimationStage, TIMER_MIN_DELAY } from '../../constants';
-import { ReactNode, useRef, useState, useEffect, useMemo, useCallback, isValidElement, cloneElement } from 'react';
+import {
+  ReactNode,
+  useRef,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  isValidElement,
+  cloneElement,
+} from 'react';
 
 export const useTransitorChangerViewModel = (
   params: ITransitorChangerViewModelParams,
@@ -62,20 +72,24 @@ export const useTransitorChangerViewModel = (
       setIdleActiveKey(activeKey);
       setCurrentChildren(idleItem?.snapshot);
     }
+
     if (animationStage === AnimationStage.BeforeEnter) {
       setCurrentChildren((prev) => {
         setPrevChildren(prev);
         const activeItem = getActiveChildren();
-        return activeItem?.snapshot || null
+        return activeItem?.snapshot || null;
       });
       setRootSizes(getNodeSizes(rootRef?.current));
     }
+
     if (animationStage === AnimationStage.Entering) {
       setRootSizes(getNodeSizes(currentElementRef?.current));
     }
+
     if (animationStage === AnimationStage.Entered) {
       setPrevChildren(null);
     }
+
     if (animationStage === AnimationStage.Idle) {
       setRootSizes(null);
     }

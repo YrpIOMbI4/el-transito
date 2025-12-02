@@ -11,6 +11,7 @@ export const Transitor: FC<ITransitorProps> = (props) => {
 
   return (
     <TransitorChanger
+      as={111}
       items={viewModel.items}
       activeKey={viewModel.activeKey}
       duration={duration}

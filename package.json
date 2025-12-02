@@ -4,7 +4,8 @@
   "license": "MIT",
   "packageManager": "yarn@4.6.0",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prettier": "prettier --config ./.prettierrc.json --write \"**/*.{js,mjs,ts,tsx,json,scss}\""
   },
   "workspaces": [
     "packages/el-transito",
