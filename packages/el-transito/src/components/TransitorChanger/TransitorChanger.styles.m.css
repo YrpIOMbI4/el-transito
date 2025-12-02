@@ -45,8 +45,8 @@
   opacity: 0;
 }
 
-.beforeEnter .currentChildren,
-.currentChildren {
+.beforeEnter .currentChildren {
+  transition-duration: 0ms;
   opacity: 0;
 }
 
@@ -57,8 +57,8 @@
   left: 0;
 }
 
-.entering .currentChildren,
 .idle .currentChildren,
+.entering .currentChildren,
 .entered .currentChildren {
   opacity: 1;
 }

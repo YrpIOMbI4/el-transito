@@ -1,10 +1,10 @@
 import {
   ITransitorChangerViewModelParams,
   ITransitorChangerViewModel,
-  ITransitorElementSizes,
+  ITransitorElementSizes, TTransitorChangerItem,
 } from './TransitorChanger.types';
 import { AnimationStage, TIMER_MIN_DELAY } from '../../constants';
-import { ReactNode, useRef, useState, useEffect, useMemo, useCallback } from 'react';
+import { ReactNode, useRef, useState, useEffect, useMemo, useCallback, isValidElement, cloneElement } from 'react';
 
 export const useTransitorChangerViewModel = (
   params: ITransitorChangerViewModelParams,
@@ -23,10 +23,10 @@ export const useTransitorChangerViewModel = (
   const [rootSizes, setRootSizes] = useState<ITransitorElementSizes | null>(null);
 
   const getActiveChildren = useCallback(() => {
-    return items.find((item) => item.key === idleActiveKey)?.children ?? null;
+    return items.find((item) => item.key === idleActiveKey) ?? null;
   }, [items, idleActiveKey]);
 
-  const idleChildren = useMemo(() => getActiveChildren(), [items, idleActiveKey]);
+  const idleItem = useMemo(() => getActiveChildren(), [items, idleActiveKey]);
 
   const changeStage = (stage: AnimationStage, timing = TIMER_MIN_DELAY): Promise<void> => {
     return new Promise<void>((resolve) => {
@@ -46,7 +46,7 @@ export const useTransitorChangerViewModel = (
     await changeStage(AnimationStage.BeforeEnter);
     await changeStage(AnimationStage.Entering);
     await changeStage(AnimationStage.Entered, duration);
-    changeStage(AnimationStage.Idle);
+    await changeStage(AnimationStage.Idle);
   };
 
   const getNodeSizes = (node: HTMLElement | null) => {
@@ -60,12 +60,13 @@ export const useTransitorChangerViewModel = (
   useEffect(() => {
     if (animationStage === AnimationStage.Initial) {
       setIdleActiveKey(activeKey);
-      setCurrentChildren(idleChildren);
+      setCurrentChildren(idleItem?.snapshot);
     }
     if (animationStage === AnimationStage.BeforeEnter) {
       setCurrentChildren((prev) => {
         setPrevChildren(prev);
-        return getActiveChildren();
+        const activeItem = getActiveChildren();
+        return activeItem?.snapshot || null
       });
       setRootSizes(getNodeSizes(rootRef?.current));
     }
@@ -99,7 +100,7 @@ export const useTransitorChangerViewModel = (
   );
 
   return {
-    idleChildren,
+    idleChildren: idleItem?.children,
     currentChildren,
     prevChildren,
     animationStage,

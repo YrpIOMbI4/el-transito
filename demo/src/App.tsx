@@ -1,10 +1,12 @@
-import { useState } from 'react';
-import { TransitorChanger, TransitorElement, Transitor } from '@sdrobot/el-transito';
+import {useState, JSX, FC} from 'react';
+import { TransitorElement, Transitor } from '@sdrobot/el-transito';
 import styles from './App.styles.m.css';
+import {SomeComponent} from "./SomeComponent/SomeComponent";
 
 export function App() {
   const [activeKey, setActiveKey] = useState<string>('one');
   const [activeKey2, setActiveKey2] = useState<string>('one2');
+  const [Component, setComponent] = useState<FC<any> | null>(null);
   const [value, setValue] = useState<string>('');
   return (
     <div>
@@ -35,6 +37,21 @@ export function App() {
           </TransitorElement>
           <TransitorElement id="two2" when={activeKey2 === 'two2'}>
             <div style={{ width: '100%' }}>woiefjowiejf oweofjiweoifj weoifw</div>
+          </TransitorElement>
+        </Transitor>
+      </div>
+      <button onClick={() => {
+        setComponent((s: FC<any> | null) => s ? null : SomeComponent);
+      }}>
+        change
+      </button>
+      <div>
+        <Transitor duration={600} animateWidth={false} animateHeight={false}>
+          <TransitorElement id='111' when={!Component}>
+            {null}
+          </TransitorElement>
+          <TransitorElement id="comp" when={!!Component}>
+            {Component && <Component />}
           </TransitorElement>
         </Transitor>
       </div>

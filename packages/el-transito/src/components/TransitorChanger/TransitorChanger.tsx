@@ -32,18 +32,20 @@ export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {
   const rootStyles = useMemo(() => {
     const res = {
       '--animation-duration': `${duration}ms`,
+      overflowX: animateWidth ? 'hidden' : 'visible',
+      overflowY: animateHeight ? 'hidden' : 'visible',
     } as CSSProperties;
-
-    if (viewModel.rootSizes && animateHeight) {
-      res.height = `${viewModel.rootSizes.height}px`;
-    } else if (!animateHeight) {
-      res.height = '100%';
-    }
 
     if (viewModel.rootSizes && animateWidth) {
       res.width = `${viewModel.rootSizes.width}px`;
     } else if (!animateWidth) {
-      res.width = '100%';
+      res.width = `100%`;
+    }
+
+    if (viewModel.rootSizes && animateHeight) {
+      res.height = `${viewModel.rootSizes.height}px`;
+    } else if (!animateHeight) {
+      res.height = `100%`;
     }
 
     return res;

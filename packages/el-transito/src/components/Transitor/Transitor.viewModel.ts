@@ -1,4 +1,4 @@
-import React, { Children, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {Children, cloneElement, useEffect, useState} from 'react';
 import { ITransitorViewModel, ITransitorViewModelParams } from './Transitor.types';
 import { TransitorElement } from '../TransitorElement';
 import { TTransitorChangerItem } from '../TransitorChanger/TransitorChanger.types';
@@ -12,13 +12,12 @@ export function useTransitorViewModel(params: ITransitorViewModelParams): ITrans
     const newItems: TTransitorChangerItem[] = [];
     let newActiveKey = '';
 
-    console.log(Children.toArray(children));
-
     Children.toArray(children).forEach((child) => {
       if (!React.isValidElement(child) || child.type !== TransitorElement) {
         newItems.push({
           key: 'null',
           children: null,
+          snapshot: null
         });
         return;
       }
@@ -26,9 +25,12 @@ export function useTransitorViewModel(params: ITransitorViewModelParams): ITrans
       if (child.props.when) {
         newActiveKey = key;
       }
+      const prevItem = items.find((item) => item.key === key);
+      const newChildren = child?.props.children ? child : prevItem?.children
       newItems.push({
         key,
         children: child,
+        snapshot: newChildren ?? null,
       });
     });
 

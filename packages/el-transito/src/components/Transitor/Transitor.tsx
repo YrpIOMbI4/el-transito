@@ -9,9 +9,6 @@ export const Transitor: FC<ITransitorProps> = (props) => {
     children,
   });
 
-  console.log(viewModel.items);
-  console.log(viewModel.activeKey);
-
   return (
     <TransitorChanger
       items={viewModel.items}

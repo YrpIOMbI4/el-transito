@@ -4,6 +4,7 @@ import { AnimationStage } from '../../constants';
 export type TTransitorChangerItem = {
   key: string;
   children: ReactNode;
+  snapshot: ReactNode | null;
 };
 
 export interface ITransitorChangerProps {
