@@ -1,17 +1,17 @@
 import { CSSProperties, JSX } from 'react';
-import { TTransitorElementType } from '../TransitorElement';
+
 import {
   ITransitorChangerProps,
   TTransitorChangerItem,
 } from '../TransitorChanger/TransitorChanger.types';
+import { TTransitorElementType } from '../TransitorElement';
 
 export type TTransitorChildren = React.ReactElement<any, TTransitorElementType>;
 
-export interface ITransitorProps
-  extends Pick<
-    ITransitorChangerProps,
-    'duration' | 'animateWidth' | 'animateHeight' | 'animateOnFirstRender'
-  > {
+export interface ITransitorProps extends Pick<
+  ITransitorChangerProps,
+  'duration' | 'animateWidth' | 'animateHeight' | 'animateOnFirstRender'
+> {
   children?: TTransitorChildren[] | TTransitorChildren;
   className?: string;
   style?: CSSProperties;

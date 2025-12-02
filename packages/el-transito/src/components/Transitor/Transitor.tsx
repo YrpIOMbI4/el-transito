@@ -1,5 +1,6 @@
-import { TransitorChanger } from '../TransitorChanger';
 import { FC } from 'react';
+
+import { TransitorChanger } from '../TransitorChanger';
 import { ITransitorProps } from './Transitor.types';
 import { useTransitorViewModel } from './Transitor.viewModel';
 
@@ -11,7 +12,6 @@ export const Transitor: FC<ITransitorProps> = (props) => {
 
   return (
     <TransitorChanger
-      as={111}
       items={viewModel.items}
       activeKey={viewModel.activeKey}
       duration={duration}

@@ -16,7 +16,7 @@ function applyPublishConfigPaths(): void {
 
   const targetPath = path.resolve(packagePath, './package.json');
 
-  fse.writeFileSync(targetPath, JSON.stringify(newPackageData, null, 2), 'utf8', (err) => {
+  fse.writeFileSync(targetPath, JSON.stringify(newPackageData, null, 2), 'utf8', err => {
     if (err) throw err;
     console.log('JSON file has been updated.');
   });

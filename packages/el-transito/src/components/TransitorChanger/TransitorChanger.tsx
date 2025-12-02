@@ -1,8 +1,10 @@
 import { CSSProperties, FC, RefObject, useMemo } from 'react';
-import { ITransitorChangerProps } from './TransitorChanger.types';
-import styles from './TransitorChanger.styles.m.css';
+
 import classNames from 'classnames';
+
 import { AnimationStage, TRANSITION_DEFAULT_DURATION } from '../../constants';
+import styles from './TransitorChanger.styles.m.css';
+import { ITransitorChangerProps } from './TransitorChanger.types';
 import { useTransitorChangerViewModel } from './TransitorChanger.viewModel';
 
 export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {

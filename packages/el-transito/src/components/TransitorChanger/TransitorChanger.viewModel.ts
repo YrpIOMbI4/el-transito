@@ -1,23 +1,14 @@
-import {
-  ITransitorChangerViewModelParams,
-  ITransitorChangerViewModel,
-  ITransitorElementSizes,
-  TTransitorChangerItem,
-} from './TransitorChanger.types';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
 import { AnimationStage, TIMER_MIN_DELAY } from '../../constants';
 import {
-  ReactNode,
-  useRef,
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  isValidElement,
-  cloneElement,
-} from 'react';
+  ITransitorChangerViewModel,
+  ITransitorChangerViewModelParams,
+  ITransitorElementSizes,
+} from './TransitorChanger.types';
 
 export const useTransitorChangerViewModel = (
-  params: ITransitorChangerViewModelParams,
+  params: ITransitorChangerViewModelParams
 ): ITransitorChangerViewModel => {
   const { activeKey, items, duration, animateOnFirstRender } = params;
 
@@ -102,7 +93,7 @@ export const useTransitorChangerViewModel = (
       return;
     }
     handleActiveKeyChanged();
-  }, [activeKey]);
+  }, [activeKey, handleActiveKeyChanged]);
 
   useEffect(
     () => () => {
@@ -110,7 +101,7 @@ export const useTransitorChangerViewModel = (
         clearTimeout(animationTimerRef.current);
       }
     },
-    [],
+    []
   );
 
   return {
