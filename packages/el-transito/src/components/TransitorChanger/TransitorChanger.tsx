@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { AnimationStage, TRANSITION_DEFAULT_DURATION } from '../../constants';
 import styles from './TransitorChanger.styles.m.css';
 import { ITransitorChangerProps } from './TransitorChanger.types';
+import { getRootStyles } from './TransitorChanger.utils';
 import { useTransitorChangerViewModel } from './TransitorChanger.viewModel';
 
 export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {
@@ -31,28 +32,15 @@ export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {
     [styles.idle]: viewModel.animationStage === AnimationStage.Idle,
   });
 
-  const rootStyles = useMemo(() => {
-    const isIdle = viewModel.animationStage === AnimationStage.Idle;
-    const res = {
-      '--animation-duration': `${duration}ms`,
-      overflowX: animateWidth && !isIdle ? 'hidden' : 'visible',
-      overflowY: animateHeight && !isIdle ? 'hidden' : 'visible',
-    } as CSSProperties;
-
-    if (viewModel.rootSizes && animateHeight) {
-      res.height = `${viewModel.rootSizes.height}px`;
-    } else if (!animateHeight) {
-      res.height = '100%';
-    }
-
-    if (viewModel.rootSizes && animateWidth) {
-      res.width = `${viewModel.rootSizes.width}px`;
-    } else if (!animateWidth) {
-      res.width = '100%';
-    }
-
-    return res;
-  }, [viewModel.rootSizes, animateWidth, animateHeight, duration]);
+  const rootStyles = useMemo((): CSSProperties => {
+    return getRootStyles({
+      animateHeight,
+      animateWidth,
+      animationStage: viewModel.animationStage,
+      duration,
+      rootSizes: viewModel.rootSizes,
+    });
+  }, [viewModel.rootSizes, animateWidth, animateHeight, duration, viewModel.animationStage]);
 
   return (
     <div

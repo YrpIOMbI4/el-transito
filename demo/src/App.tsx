@@ -1,3 +1,4 @@
+// eslint-disable @typescript-eslint/no-explicit-any
 import { FC, useState } from 'react';
 
 import { Transitor, TransitorElement } from '@sdrobot/el-transito';
@@ -15,7 +16,7 @@ export function App() {
       <button onClick={() => setActiveKey((key) => (key === 'one' ? 'two' : 'one'))}>change</button>
       <Transitor
         duration={500}
-        animateOnFirstRender
+        animateOnFirstRender={false}
       >
         <TransitorElement
           id="one"
@@ -70,7 +71,7 @@ export function App() {
       </button>
       <div>
         <Transitor
-          duration={600}
+          duration={300}
           animateWidth={false}
           animateHeight={false}
         >

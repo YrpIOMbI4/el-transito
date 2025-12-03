@@ -5,12 +5,7 @@
   transition-duration: var(--animation-duration);
   transition-timing-function: ease;
   transition-property: width, height;
-  overflow: hidden;
   width: min-content;
-}
-
-.root.idle {
-  overflow: visible;
 }
 
 .prevChildren,
