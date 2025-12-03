@@ -32,22 +32,23 @@ export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {
   });
 
   const rootStyles = useMemo(() => {
+    const isIdle = viewModel.animationStage === AnimationStage.Idle;
     const res = {
       '--animation-duration': `${duration}ms`,
-      overflowX: animateWidth ? 'hidden' : 'visible',
-      overflowY: animateHeight ? 'hidden' : 'visible',
+      overflowX: animateWidth && !isIdle ? 'hidden' : 'visible',
+      overflowY: animateHeight && !isIdle ? 'hidden' : 'visible',
     } as CSSProperties;
-
-    if (viewModel.rootSizes && animateWidth) {
-      res.width = `${viewModel.rootSizes.width}px`;
-    } else if (!animateWidth) {
-      res.width = `100%`;
-    }
 
     if (viewModel.rootSizes && animateHeight) {
       res.height = `${viewModel.rootSizes.height}px`;
     } else if (!animateHeight) {
-      res.height = `100%`;
+      res.height = '100%';
+    }
+
+    if (viewModel.rootSizes && animateWidth) {
+      res.width = `${viewModel.rootSizes.width}px`;
+    } else if (!animateWidth) {
+      res.width = '100%';
     }
 
     return res;

@@ -12,7 +12,7 @@
   ],
   "homepage": "https://github.com/YrpIOMbI4/el-transito",
   "license": "MIT",
-  "version": "0.0.1-alpha.6",
+  "version": "0.0.1-alpha.7",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.esm.js",

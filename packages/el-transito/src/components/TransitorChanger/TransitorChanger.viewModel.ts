@@ -28,6 +28,7 @@ export const useTransitorChangerViewModel = (
   }, [items, idleActiveKey]);
 
   const idleItem = useMemo(() => getActiveChildren(), [items, idleActiveKey]);
+  const idleChildren = idleItem?.children;
 
   const changeStage = (stage: AnimationStage, timing = TIMER_MIN_DELAY): Promise<void> => {
     return new Promise<void>((resolve) => {
@@ -47,7 +48,7 @@ export const useTransitorChangerViewModel = (
     await changeStage(AnimationStage.BeforeEnter);
     await changeStage(AnimationStage.Entering);
     await changeStage(AnimationStage.Entered, duration);
-    await changeStage(AnimationStage.Idle);
+    changeStage(AnimationStage.Idle);
   };
 
   const getNodeSizes = (node: HTMLElement | null) => {
@@ -63,24 +64,19 @@ export const useTransitorChangerViewModel = (
       setIdleActiveKey(activeKey);
       setCurrentChildren(idleItem?.snapshot);
     }
-
     if (animationStage === AnimationStage.BeforeEnter) {
       setCurrentChildren((prev) => {
         setPrevChildren(prev);
-        const activeItem = getActiveChildren();
-        return activeItem?.snapshot || null;
+        return getActiveChildren()?.snapshot;
       });
       setRootSizes(getNodeSizes(rootRef?.current));
     }
-
     if (animationStage === AnimationStage.Entering) {
       setRootSizes(getNodeSizes(currentElementRef?.current));
     }
-
     if (animationStage === AnimationStage.Entered) {
       setPrevChildren(null);
     }
-
     if (animationStage === AnimationStage.Idle) {
       setRootSizes(null);
     }
@@ -93,7 +89,7 @@ export const useTransitorChangerViewModel = (
       return;
     }
     handleActiveKeyChanged();
-  }, [activeKey, handleActiveKeyChanged]);
+  }, [activeKey]);
 
   useEffect(
     () => () => {
@@ -105,7 +101,7 @@ export const useTransitorChangerViewModel = (
   );
 
   return {
-    idleChildren: idleItem?.children,
+    idleChildren,
     currentChildren,
     prevChildren,
     animationStage,
