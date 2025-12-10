@@ -1,10 +1,11 @@
 .root {
   --animation-duration: 0;
+  --animation-transition-property: width, height;
 
   position: relative;
   transition-duration: var(--animation-duration);
   transition-timing-function: ease;
-  transition-property: width, height;
+  transition-property: var(--animation-transition-property);
   width: min-content;
 }
 
@@ -22,22 +23,19 @@
   z-index: 1;
 }
 
-.beforeEnter .prevChildren,
 .prevChildren {
   opacity: 1;
-}
-
-.entering .prevChildren,
-.entered .prevChildren {
   position: absolute;
   top: 0;
   left: 0;
 }
 
-.entering .prevChildren,
-.idle .prevChildren,
-.entered .prevChildren {
+.entering .prevChildren {
   opacity: 0;
+}
+
+.currentChildren {
+  opacity: 1;
 }
 
 .beforeEnter .currentChildren {
@@ -45,15 +43,10 @@
   opacity: 0;
 }
 
+.beforeEnter .currentChildren,
 .entering .currentChildren,
 .entered .currentChildren {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-.idle .currentChildren,
-.entering .currentChildren,
-.entered .currentChildren {
-  opacity: 1;
 }

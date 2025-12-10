@@ -48,16 +48,16 @@ export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {
       ref={viewModel.rootRef as RefObject<HTMLDivElement>}
       className={rootClassName}
     >
-      {viewModel.prevChildren && (
+      {viewModel.animationStage !== AnimationStage.Idle && (
         <div className={styles.prevChildren}>{viewModel.prevChildren}</div>
       )}
       <div
         ref={viewModel.currentElementRef as RefObject<HTMLDivElement>}
         className={styles.currentChildren}
       >
-        {viewModel.animationStage === AnimationStage.Idle
-          ? viewModel.idleChildren
-          : viewModel.currentChildren}
+        {viewModel.animationStage !== AnimationStage.Idle
+          ? viewModel.currentChildren
+          : viewModel.idleChildren}
       </div>
     </div>
   );

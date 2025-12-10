@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
 
 import { AnimationStage } from '../../constants';
-import { ITransitorElementSizes } from './TransitorChanger.types';
+import { ITransitorElementSizes } from '../../interfaces';
 
 interface IGetRootStylesParams {
   animationStage: AnimationStage;
@@ -40,4 +40,12 @@ export function getRootStyles(params: IGetRootStylesParams): CSSProperties {
   res.height = heightValue;
 
   return res;
+}
+
+export function getNodeSizes(node: HTMLElement | null): ITransitorElementSizes {
+  const rect = node?.getBoundingClientRect();
+  return {
+    width: rect?.width || 0,
+    height: rect?.height || 0,
+  };
 }
