@@ -9,7 +9,7 @@ export function devServer(): Configuration | undefined {
         warnings: false,
       },
     },
-    port: 3000, //given port to exec. app
+    port: 'auto',
     open: false, // open new tab
     hot: true, // Enable webpack's Hot Module Replacement
   };

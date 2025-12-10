@@ -1,111 +1,103 @@
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import { AnimationStage } from '../../constants';
+import { ITransitorElementSizes } from '../../interfaces';
+import { TimerManager } from '../../modules/TimerManager';
 import {
-  ITransitorChangerViewModelParams,
   ITransitorChangerViewModel,
-  ITransitorElementSizes, TTransitorChangerItem,
+  ITransitorChangerViewModelParams,
 } from './TransitorChanger.types';
-import { AnimationStage, TIMER_MIN_DELAY } from '../../constants';
-import { ReactNode, useRef, useState, useEffect, useMemo, useCallback, isValidElement, cloneElement } from 'react';
+import { getNodeSizes } from './TransitorChanger.utils';
 
 export const useTransitorChangerViewModel = (
-  params: ITransitorChangerViewModelParams,
+  params: ITransitorChangerViewModelParams
 ): ITransitorChangerViewModel => {
   const { activeKey, items, duration, animateOnFirstRender } = params;
+  const [animationStage, setAnimationStage] = useState<AnimationStage>(AnimationStage.Idle);
+  const { current: waitManager } = useRef(new TimerManager());
+
+  const getItem = useCallback(
+    (key: string) => {
+      return items.find((item) => item.key === key) ?? null;
+    },
+    [items]
+  );
 
   const rootRef = useRef<HTMLElement>(null);
   const currentElementRef = useRef<HTMLElement>(null);
-  const animationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isInitiallyRendered = useRef(animateOnFirstRender);
+  const prevActiveKey = useRef(activeKey);
+  const prevChildrenRef = useRef<ReactNode | null>(null);
+  const currentChildrenRef = useRef<ReactNode | null>(getItem(activeKey)?.snapshot);
+  const rootSizesRef = useRef<ITransitorElementSizes | null>(null);
 
-  const [idleActiveKey, setIdleActiveKey] = useState('');
-  const [animationStage, setAnimationStage] = useState<AnimationStage>(AnimationStage.Idle);
-  const [currentChildren, setCurrentChildren] = useState<ReactNode | null>(null);
-  const [prevChildren, setPrevChildren] = useState<ReactNode | null>(null);
-  const [rootSizes, setRootSizes] = useState<ITransitorElementSizes | null>(null);
+  const idleActiveKey = useMemo((): string => {
+    if (animationStage === AnimationStage.Initial) {
+      prevActiveKey.current = activeKey;
+    }
+    return prevActiveKey.current;
+  }, [animationStage]);
 
-  const getActiveChildren = useCallback(() => {
-    return items.find((item) => item.key === idleActiveKey) ?? null;
-  }, [items, idleActiveKey]);
+  const idleChildren = useMemo(() => {
+    return getItem(idleActiveKey)?.children;
+  }, [idleActiveKey, getItem]);
 
-  const idleItem = useMemo(() => getActiveChildren(), [items, idleActiveKey]);
+  const onInitialStage = () => {
+    rootSizesRef.current = getNodeSizes(rootRef?.current);
+    prevChildrenRef.current = getItem(prevActiveKey.current)?.snapshot || null;
+    prevActiveKey.current = activeKey;
+    setAnimationStage(AnimationStage.Initial);
+  };
 
-  const changeStage = (stage: AnimationStage, timing = TIMER_MIN_DELAY): Promise<void> => {
-    return new Promise<void>((resolve) => {
-      animationTimerRef.current = setTimeout(() => {
-        setAnimationStage(stage);
-        resolve();
-      }, timing);
-    });
+  const onBeforeEnterStage = () => {
+    currentChildrenRef.current = getItem(activeKey)?.snapshot || null;
+    setAnimationStage(AnimationStage.BeforeEnter);
+  };
+
+  const onEnteringStage = () => {
+    setAnimationStage(AnimationStage.Entering);
+    rootSizesRef.current = getNodeSizes(currentElementRef?.current);
+  };
+
+  const onEnteredStage = () => {
+    setAnimationStage(AnimationStage.Entered);
+  };
+
+  const onIdleStage = () => {
+    rootSizesRef.current = null;
+    setAnimationStage(AnimationStage.Idle);
   };
 
   const handleActiveKeyChanged = async (): Promise<void> => {
-    if (animationTimerRef.current) {
-      clearTimeout(animationTimerRef.current);
-    }
-
-    setAnimationStage(AnimationStage.Initial);
-    await changeStage(AnimationStage.BeforeEnter);
-    await changeStage(AnimationStage.Entering);
-    await changeStage(AnimationStage.Entered, duration);
-    await changeStage(AnimationStage.Idle);
+    waitManager.cancelAll();
+    onInitialStage();
+    await waitManager.wait().then(onBeforeEnterStage);
+    await waitManager.wait().then(onEnteringStage);
+    await waitManager.wait(duration).then(onEnteredStage);
+    await waitManager.wait().then(onIdleStage);
   };
-
-  const getNodeSizes = (node: HTMLElement | null) => {
-    const rect = node?.getBoundingClientRect();
-    return {
-      width: rect?.width || 0,
-      height: rect?.height || 0,
-    };
-  };
-
-  useEffect(() => {
-    if (animationStage === AnimationStage.Initial) {
-      setIdleActiveKey(activeKey);
-      setCurrentChildren(idleItem?.snapshot);
-    }
-    if (animationStage === AnimationStage.BeforeEnter) {
-      setCurrentChildren((prev) => {
-        setPrevChildren(prev);
-        const activeItem = getActiveChildren();
-        return activeItem?.snapshot || null
-      });
-      setRootSizes(getNodeSizes(rootRef?.current));
-    }
-    if (animationStage === AnimationStage.Entering) {
-      setRootSizes(getNodeSizes(currentElementRef?.current));
-    }
-    if (animationStage === AnimationStage.Entered) {
-      setPrevChildren(null);
-    }
-    if (animationStage === AnimationStage.Idle) {
-      setRootSizes(null);
-    }
-  }, [animationStage]);
 
   useEffect(() => {
     if (!isInitiallyRendered.current) {
       isInitiallyRendered.current = true;
-      setIdleActiveKey(activeKey);
       return;
     }
     handleActiveKeyChanged();
   }, [activeKey]);
 
-  useEffect(
-    () => () => {
-      if (animationTimerRef.current) {
-        clearTimeout(animationTimerRef.current);
-      }
-    },
-    [],
-  );
+  useEffect(() => {
+    return () => {
+      waitManager.cancelAll();
+    };
+  }, []);
 
   return {
-    idleChildren: idleItem?.children,
-    currentChildren,
-    prevChildren,
+    idleChildren,
+    currentChildren: currentChildrenRef.current,
+    prevChildren: prevChildrenRef.current,
     animationStage,
     rootRef,
     currentElementRef,
-    rootSizes,
+    rootSizes: rootSizesRef.current,
   };
 };

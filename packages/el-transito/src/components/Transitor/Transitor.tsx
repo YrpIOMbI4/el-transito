@@ -1,5 +1,6 @@
-import { TransitorChanger } from '../TransitorChanger';
 import { FC } from 'react';
+
+import { TransitorChanger } from '../TransitorChanger';
 import { ITransitorProps } from './Transitor.types';
 import { useTransitorViewModel } from './Transitor.viewModel';
 

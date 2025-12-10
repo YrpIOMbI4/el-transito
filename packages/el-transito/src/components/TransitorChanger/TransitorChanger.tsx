@@ -1,8 +1,11 @@
 import { CSSProperties, FC, RefObject, useMemo } from 'react';
-import { ITransitorChangerProps } from './TransitorChanger.types';
-import styles from './TransitorChanger.styles.m.css';
+
 import classNames from 'classnames';
+
 import { AnimationStage, TRANSITION_DEFAULT_DURATION } from '../../constants';
+import styles from './TransitorChanger.styles.m.css';
+import { ITransitorChangerProps } from './TransitorChanger.types';
+import { getRootStyles } from './TransitorChanger.utils';
 import { useTransitorChangerViewModel } from './TransitorChanger.viewModel';
 
 export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {
@@ -29,27 +32,15 @@ export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {
     [styles.idle]: viewModel.animationStage === AnimationStage.Idle,
   });
 
-  const rootStyles = useMemo(() => {
-    const res = {
-      '--animation-duration': `${duration}ms`,
-      overflowX: animateWidth ? 'hidden' : 'visible',
-      overflowY: animateHeight ? 'hidden' : 'visible',
-    } as CSSProperties;
-
-    if (viewModel.rootSizes && animateWidth) {
-      res.width = `${viewModel.rootSizes.width}px`;
-    } else if (!animateWidth) {
-      res.width = `100%`;
-    }
-
-    if (viewModel.rootSizes && animateHeight) {
-      res.height = `${viewModel.rootSizes.height}px`;
-    } else if (!animateHeight) {
-      res.height = `100%`;
-    }
-
-    return res;
-  }, [viewModel.rootSizes, animateWidth, animateHeight, duration]);
+  const rootStyles = useMemo((): CSSProperties => {
+    return getRootStyles({
+      animateHeight,
+      animateWidth,
+      animationStage: viewModel.animationStage,
+      duration,
+      rootSizes: viewModel.rootSizes,
+    });
+  }, [viewModel.rootSizes, animateWidth, animateHeight, duration, viewModel.animationStage]);
 
   return (
     <div
@@ -57,16 +48,16 @@ export const TransitorChanger: FC<ITransitorChangerProps> = (props) => {
       ref={viewModel.rootRef as RefObject<HTMLDivElement>}
       className={rootClassName}
     >
-      {viewModel.prevChildren && (
+      {viewModel.animationStage !== AnimationStage.Idle && (
         <div className={styles.prevChildren}>{viewModel.prevChildren}</div>
       )}
       <div
         ref={viewModel.currentElementRef as RefObject<HTMLDivElement>}
         className={styles.currentChildren}
       >
-        {viewModel.animationStage === AnimationStage.Idle
-          ? viewModel.idleChildren
-          : viewModel.currentChildren}
+        {viewModel.animationStage !== AnimationStage.Idle
+          ? viewModel.currentChildren
+          : viewModel.idleChildren}
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import { ReactNode, RefObject } from 'react';
+
 import { AnimationStage } from '../../constants';
+import { ITransitorElementSizes } from '../../interfaces';
 
 export type TTransitorChangerItem = {
   key: string;
@@ -16,16 +18,12 @@ export interface ITransitorChangerProps {
   animateWidth?: boolean;
 }
 
-export interface ITransitorChangerViewModelParams
-  extends Pick<
-    ITransitorChangerProps,
-    'items' | 'activeKey' | 'duration' | 'animateOnFirstRender'
-  > {}
-
-export type ITransitorElementSizes = {
-  height?: number;
-  width?: number;
-};
+export interface ITransitorChangerViewModelParams extends Pick<
+  ITransitorChangerProps,
+  'items' | 'activeKey' | 'animateOnFirstRender'
+> {
+  duration: number;
+}
 
 export interface ITransitorChangerViewModel {
   currentChildren: ReactNode;
